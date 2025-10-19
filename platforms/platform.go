@@ -14,24 +14,26 @@ type Platform interface {
 		Installs the package based on the platform-specific package name. For
 		example, `Windows.InstallPackage("Microsoft.VisualStudioCode")`. The error
 		can be either one of:
-		  - PackageNotFound
-			- InstallError
-			- AuthorizationError
+		  - PackageNotFound, if the underlying manager cannot find the package.
+			- InstallError, if the underlying manager cannot install the package.
+			- AuthorizationError, if the package manager is unable to install under
+			  the user context.
 	*/
 	AddPackage(name string) error
 
 	/*
 		Removes the package based on the platform-specific package name. The error
 		can be either:
-			- PackageNotFound
-			- AuthorizationError
+			- PackageNotFound, if the underlying manager cannot find the package.
+			- AuthorizationError, if the package manager is unable to install under
+			  the user context.
 	*/
 	RemovePackage(name string) error
 
 	/*
 		Gets information about the package based on the platform-specific package
-		name. Package search is handled at the application level. The error will
-		usually be PackageNotFound.
+		name. Package search is handled at the application level. The error can be
+		PackageNotFound if the underlying manager cannot find it.
 	*/
 	PackageInfo(name string) error
 
@@ -39,4 +41,12 @@ type Platform interface {
 		Gets platform information.
 	*/
 	GetPlatformInfo() string
+
+	/*
+		Installs any prerequisite programs, if needed, and ensures we're ready to
+		go. This should be expected to run every time the program is run. If nothing
+		is needed, then should simply return. The error can be AuthorizationError if
+		the application is not permitted to run under the authorized user context.
+	*/
+	SetupPackageManager() error
 }
