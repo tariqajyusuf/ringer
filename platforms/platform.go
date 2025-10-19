@@ -31,22 +31,15 @@ type Platform interface {
 	RemovePackage(name string) error
 
 	/*
-		Gets information about the package based on the platform-specific package
-		name. Package search is handled at the application level. The error can be
-		PackageNotFound if the underlying manager cannot find it.
-	*/
-	PackageInfo(name string) error
-
-	/*
 		Gets platform information.
 	*/
-	GetPlatformInfo() string
+	PlatformInfo() string
 
 	/*
 		For guise files, the platform stub is what we use to identify the translated
 		package name.
 	*/
-	GetPlatformStub() string
+	PlatformStub() string
 
 	/*
 		For platforms to nominate themselves for an option based on the base system
