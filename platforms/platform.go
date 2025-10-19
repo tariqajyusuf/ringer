@@ -49,6 +49,13 @@ type Platform interface {
 	GetPlatformStub() string
 
 	/*
+		For platforms to nominate themselves for an option based on the base system
+		information. This allows for multiple platforms to nominate themselves
+		(e.g. Debian platforms can install along with generic Linux installers).
+	*/
+	EnabledForSystem(system SystemInfo) bool
+
+	/*
 		Installs any prerequisite programs, if needed, and ensures we're ready to
 		go. This should be expected to run every time the program is run. If nothing
 		is needed, then should simply return. The error can be AuthorizationError if
