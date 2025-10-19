@@ -1,0 +1,7 @@
+name: "Visual Studio Code"
+description: "A source-code editor developed by Microsoft for Windows, Linux and macOS."
+platforms:
+  - platform: "brew"
+    name: "visual-studio-code"
+  - platform: "windows"
+    name: "Microsoft.VisualStudioCode"

@@ -12,6 +12,6 @@ type Guise struct {
 	description string `yaml:"description"`
 	platforms   []struct {
 		platform    string `yaml:"platform"`
-		packageName string `yaml:"packageName"`
+		packageName string `yaml:"name"`
 	} `yaml:"platforms,flow"`
 }
