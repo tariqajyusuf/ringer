@@ -1,6 +1,7 @@
 package io
 
 type Guise struct {
+	Marshalable
 	name        string `yaml:"name"`
 	description string `yaml:"description"`
 	platforms   []struct {
