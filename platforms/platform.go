@@ -43,6 +43,12 @@ type Platform interface {
 	GetPlatformInfo() string
 
 	/*
+		For guise files, the platform stub is what we use to identify the translated
+		package name.
+	*/
+	GetPlatformStub() string
+
+	/*
 		Installs any prerequisite programs, if needed, and ensures we're ready to
 		go. This should be expected to run every time the program is run. If nothing
 		is needed, then should simply return. The error can be AuthorizationError if
