@@ -1,10 +1,10 @@
 # Ringer: A universal package manager and workstation setup tool
 
-> *ringer 1 | ˈriNGər |*
-> noun
+> *ringer 1 | ˈriNGər |*\
+> noun\
 >   1 **informal** (also dead ringer) a person or thing that looks exactly like
->     another: he is a dead ringer for his late papa
->   2 a person or device that rings something.
+>     another: he is a dead ringer for his late papa\
+>   2 a person or device that rings something.\
 >   3 a universal package manager for setting up new workstations
 
 Ringer is a universal install command that bridges many of the common platforms.
