@@ -1,7 +1,9 @@
 package platforms
 
 import (
-	"io"
+	"context"
+	"errors"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -56,30 +58,29 @@ func (h Homebrew) SetupPackageManager() error {
 		"/bin/bash",
 		"-c",
 		"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)")
+	runner.Env = os.Environ()
+	runner.Env = append(runner.Env, "NONINTERACTIVE=1")
 	// TODO: Log better when there is an issue.
 	return runner.Run()
 }
 
 func (h Homebrew) runBrew(verb string, packageName string) error {
-	runner := exec.Command("brew", verb, packageName)
+	runner := exec.CommandContext(context.Background(), "brew", verb, packageName)
+	runner.Env = os.Environ()
 	runner.Env = append(runner.Env, "NONINTERACTIVE=1")
-	err_pipe, err := runner.StderrPipe()
-	// TODO: Better handling for output failure
-	if err != nil {
-		return err
+	if bytes, err := runner.CombinedOutput(); err != nil {
+		return h.parseOutput(bytes)
 	}
-	if err := runner.Start(); err != nil {
+	return nil
+}
 
-		stderr, err := io.ReadAll(err_pipe)
-		// TODO: Warn of system state if output cannot be read
-		if err != nil {
-			return err
-		}
-
-		lines := strings.Split(string(stderr), "\n")
-		last_line := lines[len(lines)-1]
-		if strings.Contains(last_line, "No formulae or casks found") {
-			return PackageNotFound{message: last_line}
+func (h Homebrew) parseOutput(bytes []byte) error {
+	lines := strings.Split(string(bytes), "\n")
+	for _, line := range lines {
+		if strings.Contains(line, "Error") {
+			if strings.Contains(line, "No formulae or casks") {
+				return errors.New(line)
+			}
 		}
 	}
 	return nil

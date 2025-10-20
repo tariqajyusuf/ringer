@@ -5,7 +5,7 @@ type RingerError struct {
 	message string
 }
 
-func (e RingerError) Error() string {
+func (e *RingerError) Error() string {
 	return e.message
 }
 

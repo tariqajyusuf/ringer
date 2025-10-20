@@ -1,6 +1,10 @@
 package platforms
 
-import "github.com/tariqajyusuf/ringer/system"
+import (
+	"fmt"
+
+	"github.com/tariqajyusuf/ringer/system"
+)
 
 /*
 Platform represents a operating system environment.
@@ -66,7 +70,8 @@ only allow calls to platforms that are enabled for the current system and will
 handle any necessary setup prior to package installation/removal.
 */
 type Broker struct {
-	Platforms map[string]Platform
+	Platforms          map[string]Platform
+	preferred_platform string
 }
 
 /*
@@ -87,8 +92,34 @@ func NewBroker() *Broker {
 				// TODO: Log the error
 				println("error")
 			}
+			if b.preferred_platform != "" {
+				b.preferred_platform = key
+			}
 			b.Platforms[key] = platform
 		}
 	}
 	return b
+}
+
+func (b *Broker) SetPreferredPlatform(name string) error {
+	if _, ok := b.Platforms[name]; !ok {
+		return fmt.Errorf("platform %s is not available", name)
+	}
+	b.preferred_platform = name
+	return nil
+}
+
+func (b *Broker) AddPackage(name string) {
+	for key, platform := range b.Platforms {
+		fmt.Printf("Installing via %s\n", key)
+		err := platform.AddPackage(name)
+		// TODO: We will probably need to handle erros more intelligently down the
+		// line but for now we will just regurgitate from the command line.
+		if err != nil {
+			fmt.Printf("Error installing package via %s error: %s\n", key, err)
+		} else {
+			fmt.Printf("Successfully installed package via %s\n", key)
+			return
+		}
+	}
 }
