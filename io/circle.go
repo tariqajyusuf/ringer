@@ -6,7 +6,6 @@ declared based on their Guise names.
 */
 //lint:ignore U1000 Ignore unused for now
 type Circle struct {
-	Marshalable
 	preferPlatforms []string `yaml:"preferPlatforms,flow"`
 	packages        []string `yaml:"packages,flow"`
 }

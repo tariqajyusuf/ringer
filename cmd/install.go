@@ -7,6 +7,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/tariqajyusuf/ringer/io"
 	"github.com/tariqajyusuf/ringer/system/platforms"
 )
 
@@ -23,8 +24,17 @@ this system.`,
 		}
 		package_name := args[0]
 		broker := platforms.NewBroker()
-		// TODO: Change this to a package lookup.
-		broker.AddPackage(package_name)
+		guise, err := io.LocateGuise(package_name)
+		if err != nil {
+			fmt.Printf("Could not locate guise for package %s: %v\n", package_name, err)
+			return
+		}
+		fmt.Printf("%+v\n", guise)
+		if platform, ok := guise.Platforms[broker.PreferredPlatform()]; !ok {
+			fmt.Printf("Package %s is not available for platform %s\n", package_name, broker.PreferredPlatform())
+		} else {
+			broker.AddPackage(platform.PackageName)
+		}
 	},
 }
 

@@ -80,7 +80,8 @@ run once.
 */
 func NewBroker() *Broker {
 	b := &Broker{
-		Platforms: make(map[string]Platform),
+		Platforms:          make(map[string]Platform),
+		preferred_platform: "",
 	}
 	possible_platforms := map[string]Platform{}
 	possible_platforms["homebrew"] = &Homebrew{}
@@ -92,13 +93,17 @@ func NewBroker() *Broker {
 				// TODO: Log the error
 				println("error")
 			}
-			if b.preferred_platform != "" {
+			if len(b.preferred_platform) == 0 {
 				b.preferred_platform = key
 			}
 			b.Platforms[key] = platform
 		}
 	}
 	return b
+}
+
+func (b *Broker) PreferredPlatform() string {
+	return b.preferred_platform
 }
 
 func (b *Broker) SetPreferredPlatform(name string) error {
