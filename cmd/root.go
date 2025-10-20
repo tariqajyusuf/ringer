@@ -11,7 +11,7 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "Ringer",
+	Use:   "ringer",
 	Short: "A universal package manager and workstation setup tool",
 	Long: `Ringer is a universal install command that bridges many of the common
 platforms. When setting up new systems, there are usually several pieces of

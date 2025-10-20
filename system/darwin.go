@@ -3,6 +3,7 @@ package system
 import (
 	"encoding/json"
 	"os/exec"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 )
@@ -32,9 +33,12 @@ func GetMacOSInfo() SystemInfo {
 	if err != nil {
 		return SystemInfo{Kernel: MacOS}
 	}
+	split_str := strings.Split(system_profile.SPSoftwareDataType[0].OSVersion, " ")
+	major_version := split_str[1]
+	minor_version := strings.Trim(split_str[1], "()")
 	return SystemInfo{
 		Kernel:  MacOS,
 		Distro:  system_profile.SPSoftwareDataType[0].OSVersion,
-		Version: version.Must(version.NewVersion(system_profile.SPSoftwareDataType[0].KernelVersion)),
+		Version: version.Must(version.NewVersion(major_version + "+" + minor_version)),
 	}
 }

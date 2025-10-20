@@ -66,7 +66,7 @@ only allow calls to platforms that are enabled for the current system and will
 handle any necessary setup prior to package installation/removal.
 */
 type Broker struct {
-	platforms map[string]Platform
+	Platforms map[string]Platform
 }
 
 /*
@@ -75,7 +75,7 @@ run once.
 */
 func NewBroker() *Broker {
 	b := &Broker{
-		platforms: make(map[string]Platform),
+		Platforms: make(map[string]Platform),
 	}
 	possible_platforms := map[string]Platform{}
 	possible_platforms["homebrew"] = &Homebrew{}
@@ -87,7 +87,7 @@ func NewBroker() *Broker {
 				// TODO: Log the error
 				println("error")
 			}
-			b.platforms[key] = platform
+			b.Platforms[key] = platform
 		}
 	}
 	return b
