@@ -115,16 +115,27 @@ func (b *Broker) SetPreferredPlatform(name string) error {
 }
 
 func (b *Broker) AddPackage(name string) {
-	for key, platform := range b.Platforms {
-		fmt.Printf("Installing via %s\n", key)
-		err := platform.AddPackage(name)
-		// TODO: We will probably need to handle erros more intelligently down the
-		// line but for now we will just regurgitate from the command line.
-		if err != nil {
-			fmt.Printf("Error installing package via %s error: %s\n", key, err)
-		} else {
-			fmt.Printf("Successfully installed package via %s\n", key)
-			return
-		}
+	fmt.Printf("Installing via %s\n", b.preferred_platform)
+	err := b.Platforms[b.preferred_platform].AddPackage(name)
+	// TODO: We will probably need to handle errors more intelligently down the
+	// line but for now we will just regurgitate from the command line.
+	if err != nil {
+		fmt.Printf("Error installing package via %s error: %s\n", b.preferred_platform, err)
+	} else {
+		fmt.Printf("Successfully installed package via %s\n", b.preferred_platform)
+		return
+	}
+}
+
+func (b *Broker) RemovePackage(name string) {
+	fmt.Printf("Removing via %s\n", b.preferred_platform)
+	err := b.Platforms[b.preferred_platform].RemovePackage(name)
+	// TODO: We will probably need to handle errors more intelligently down the
+	// line but for now we will just regurgitate from the command line.
+	if err != nil {
+		fmt.Printf("Error removing package via %s error: %s\n", b.preferred_platform, err)
+	} else {
+		fmt.Printf("Successfully removed package via %s\n", b.preferred_platform)
+		return
 	}
 }
