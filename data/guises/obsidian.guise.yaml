@@ -1,0 +1,7 @@
+name: "Obsidian"
+description: "A powerful knowledge base that works on top of a local folder of plain text Markdown files."
+platforms:
+  homebrew:
+    name: "obsidian"
+  windows:
+    name: "Obsidian.Obsidian"

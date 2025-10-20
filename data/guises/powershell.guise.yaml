@@ -1,0 +1,7 @@
+name: "Powershell"
+description: "A task-based command-line shell and scripting language built on .NET."
+platforms:
+  homebrew:
+    name: "powershell"
+  windows:
+    name: "Microsoft.PowerShell"

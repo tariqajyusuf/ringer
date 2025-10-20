@@ -1,0 +1,7 @@
+name: "Git"
+description: "A distributed version control system for tracking changes in source code."
+platforms:
+  homebrew:
+    name: "git"
+  windows:
+    name: "Git.Git"

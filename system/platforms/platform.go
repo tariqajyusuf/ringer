@@ -6,6 +6,8 @@ import (
 	"github.com/tariqajyusuf/ringer/system"
 )
 
+// TODO: Add support for standard linux commands and package managers (apt, yum, pacman, etc).
+
 /*
 Platform represents a operating system environment.
 

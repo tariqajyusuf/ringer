@@ -1,0 +1,5 @@
+name: "iCloud"
+description: "File synchronization and cloud storage service from Apple."
+platforms:
+  windows:
+    name: "Apple.iCloud"

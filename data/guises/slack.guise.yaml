@@ -1,0 +1,7 @@
+name: "Slack"
+description: "A messaging app for teams that makes it easy to communicate and collaborate."
+platforms:
+  homebrew:
+    name: "slack"
+  windows:
+    name: "SlackTechnologies.Slack"

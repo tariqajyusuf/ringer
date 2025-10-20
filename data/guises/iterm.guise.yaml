@@ -1,0 +1,5 @@
+name: "iTerm"
+description: "A terminal emulator for macOS."
+platforms:
+  homebrew:
+    name: "iterm2"

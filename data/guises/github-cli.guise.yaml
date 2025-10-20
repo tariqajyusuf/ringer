@@ -1,0 +1,7 @@
+name: "GitHub CLI"
+description: "A command-line interface for GitHub."
+platforms:
+  homebrew:
+    name: "gh"
+  windows:
+    name: "GitHub.GitHubCLI"

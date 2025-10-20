@@ -1,0 +1,7 @@
+name: "Docker Desktop"
+description: "A software solution for managing Docker containers."
+platforms:
+  homebrew:
+    name: "docker-desktop"
+  windows:
+    name: "Docker.DockerDesktop"

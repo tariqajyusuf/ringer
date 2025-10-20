@@ -1,0 +1,7 @@
+name: "Vivaldi"
+description: "A feature-rich web browser that prioritizes user customization and privacy."
+platforms:
+  homebrew:
+    name: "vivaldi"
+  windows:
+    name: "Vivaldi.Vivaldi"

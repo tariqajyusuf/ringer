@@ -1,0 +1,5 @@
+name: "Bazel"
+description: "A build tool that focuses on speed and correctness."
+platforms:
+  homebrew:
+    name: "bazel"

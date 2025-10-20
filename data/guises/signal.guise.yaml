@@ -1,0 +1,7 @@
+name: "Signal"
+description: "A secure messaging app focused on privacy."
+platforms:
+  homebrew:
+    name: "signal"
+  windows:
+    name: "Signal.Signal"

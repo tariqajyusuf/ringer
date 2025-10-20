@@ -1,0 +1,5 @@
+name: "Raycast"
+description: "A productivity tool that allows users to quickly access applications, files, and perform various tasks using keyboard shortcuts."
+platforms:
+  homebrew:
+    name: "raycast"

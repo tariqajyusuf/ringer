@@ -1,0 +1,7 @@
+name: "Morgen"
+description: "A productivity app that helps you plan your day and manage tasks."
+platforms:
+  homebrew:
+    name: "morgen"
+  windows:
+    name: "Morgen.Morgen"

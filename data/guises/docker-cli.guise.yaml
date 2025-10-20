@@ -1,0 +1,7 @@
+name: "Docker CLI"
+description: "A command-line interface for Docker."
+platforms:
+  homebrew:
+    name: "docker"
+  windows:
+    name: "Docker.DockerCLI"
