@@ -1,5 +1,7 @@
 package platforms
 
+import "github.com/tariqajyusuf/ringer/system"
+
 /*
 Platform represents a operating system environment.
 
@@ -46,7 +48,7 @@ type Platform interface {
 		information. This allows for multiple platforms to nominate themselves
 		(e.g. Debian platforms can install along with generic Linux installers).
 	*/
-	EnabledForSystem(system SystemInfo) bool
+	EnabledForSystem(system system.SystemInfo) bool
 
 	/*
 		Installs any prerequisite programs, if needed, and ensures we're ready to
@@ -55,4 +57,38 @@ type Platform interface {
 		the application is not permitted to run under the authorized user context.
 	*/
 	SetupPackageManager() error
+}
+
+/*
+The Broker is how you interact with all platforms built into Ringer. Any new
+platform created in future versions will be registered here. The broker will
+only allow calls to platforms that are enabled for the current system and will
+handle any necessary setup prior to package installation/removal.
+*/
+type Broker struct {
+	platforms map[string]Platform
+}
+
+/*
+Creates and registers a broker with all available platforms. This should only be
+run once.
+*/
+func NewBroker() *Broker {
+	b := &Broker{
+		platforms: make(map[string]Platform),
+	}
+	possible_platforms := map[string]Platform{}
+	possible_platforms["homebrew"] = &Homebrew{}
+	possible_platforms["winget"] = &Winget{}
+
+	for key, platform := range possible_platforms {
+		if platform.EnabledForSystem(system.GetSystemInfo()) {
+			if err := platform.SetupPackageManager(); err != nil {
+				// TODO: Log the error
+				println("error")
+			}
+			b.platforms[key] = platform
+		}
+	}
+	return b
 }

@@ -5,6 +5,8 @@ import (
 	"io"
 	"os/exec"
 	"strings"
+
+	"github.com/tariqajyusuf/ringer/system"
 )
 
 /*
@@ -35,9 +37,9 @@ func (w Winget) PlatformStub() string {
 	return "winget"
 }
 
-func (w Winget) EnabledForSystem(system SystemInfo) bool {
-	switch system.kernel {
-	case Windows:
+func (w Winget) EnabledForSystem(sysinfo system.SystemInfo) bool {
+	switch sysinfo.Kernel {
+	case system.Windows:
 		return true
 	default:
 		return false

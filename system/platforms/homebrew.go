@@ -4,6 +4,8 @@ import (
 	"io"
 	"os/exec"
 	"strings"
+
+	"github.com/tariqajyusuf/ringer/system"
 )
 
 /*
@@ -35,9 +37,9 @@ func (h Homebrew) PlatformStub() string {
 	return "homebrew"
 }
 
-func (h Homebrew) EnabledForSystem(system SystemInfo) bool {
-	switch system.kernel {
-	case MacOS, Linux:
+func (h Homebrew) EnabledForSystem(sysinfo system.SystemInfo) bool {
+	switch sysinfo.Kernel {
+	case system.MacOS, system.Linux:
 		return true
 	default:
 		return false

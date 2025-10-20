@@ -1,5 +1,5 @@
 /*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
+Copyright © 2025 Tariq Yusuf <tariq@tariqyusuf.in>
 */
 package cmd
 
@@ -11,14 +11,12 @@ import (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "ringer",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:   "Ringer",
+	Short: "A universal package manager and workstation setup tool",
+	Long: `Ringer is a universal install command that bridges many of the common
+platforms. When setting up new systems, there are usually several pieces of
+software to install to get your environment just right. Ringer helps bridge that
+setup process across multiple platforms.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },
