@@ -6,6 +6,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// TODO: Add validity checks for guises.
+
 /*
 Guises are definitions of applications that can be installed on different
 platforms. Each guise contains the name, description, and platform-specific
