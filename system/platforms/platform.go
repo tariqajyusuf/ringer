@@ -79,6 +79,8 @@ Creates and registers a broker with all available platforms. This should only be
 run once.
 */
 func NewBroker() *Broker {
+	// TODO: We need to include some sort of state management to remember where we
+	// got different packages.
 	b := &Broker{
 		Platforms:          make(map[string]Platform),
 		preferred_platform: "",
@@ -114,6 +116,7 @@ func (b *Broker) SetPreferredPlatform(name string) error {
 	return nil
 }
 
+// TODO: Try every package manager until one works.
 func (b *Broker) AddPackage(name string) {
 	fmt.Printf("Installing via %s\n", b.preferred_platform)
 	err := b.Platforms[b.preferred_platform].AddPackage(name)
@@ -127,6 +130,7 @@ func (b *Broker) AddPackage(name string) {
 	}
 }
 
+// TODO: Try every package manager until one works.
 func (b *Broker) RemovePackage(name string) {
 	fmt.Printf("Removing via %s\n", b.preferred_platform)
 	err := b.Platforms[b.preferred_platform].RemovePackage(name)
