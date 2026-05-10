@@ -14,13 +14,13 @@ process across multiple platforms.
 
 ## Concepts
 
-### Circle files
-Circle files are configuration files that provide context of what you want your
+### Guise files
+Guise files are configuration files that provide context of what you want your
 system to be at the end. It is a YAML file that includes the packages,
 configurations, and settings that you want on your new system.
 
-### Guise configurations
-Guise configurations are definitions of "packages" that provide translation
+### Package configurations
+Package configurations are definitions of packages that provide translation
 between the different common platforms. This is how we translate from `ringer
 add vscode` to `brew install visual-studio-code` on Mac and `winget install
 Microsoft.VisualStudioCode` on Windows.

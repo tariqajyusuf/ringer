@@ -44,7 +44,7 @@ type Platform interface {
 	PlatformInfo() string
 
 	/*
-		For guise files, the platform stub is what we use to identify the translated
+		For package files, the platform stub is what we use to identify the translated
 		package name.
 	*/
 	PlatformStub() string

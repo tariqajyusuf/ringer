@@ -24,13 +24,13 @@ this system.`,
 		}
 		package_name := args[0]
 		broker := platforms.NewBroker()
-		guise, err := io.LocateGuise(package_name)
+		pkg, err := io.LocatePackage(package_name)
 		if err != nil {
-			fmt.Printf("Could not locate guise for package %s: %v\n", package_name, err)
+			fmt.Printf("Could not locate package %s: %v\n", package_name, err)
 			return
 		}
-		fmt.Printf("%+v\n", guise)
-		if platform, ok := guise.Platforms[broker.PreferredPlatform()]; !ok {
+		fmt.Printf("%+v\n", pkg)
+		if platform, ok := pkg.Platforms[broker.PreferredPlatform()]; !ok {
 			fmt.Printf("Package %s is not defined for platform %s\n", package_name, broker.PreferredPlatform())
 		} else {
 			broker.RemovePackage(platform.PackageName)
