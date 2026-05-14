@@ -27,18 +27,29 @@ func GetMacOSInfo() SystemInfo {
 	if err != nil {
 		return SystemInfo{Kernel: MacOS}
 	}
+	return parseMacOSProfile(output)
+}
+
+func parseMacOSProfile(output []byte) SystemInfo {
 	system_profile := SystemProfile{}
-	err = json.Unmarshal(output, &system_profile)
-	// TODO: Better error handling
-	if err != nil {
+	if err := json.Unmarshal(output, &system_profile); err != nil {
 		return SystemInfo{Kernel: MacOS}
 	}
-	split_str := strings.Split(system_profile.SPSoftwareDataType[0].OSVersion, " ")
-	major_version := split_str[1]
-	minor_version := strings.Trim(split_str[1], "()")
+	if len(system_profile.SPSoftwareDataType) == 0 {
+		return SystemInfo{Kernel: MacOS}
+	}
+	os_version := system_profile.SPSoftwareDataType[0].OSVersion
+	split_str := strings.Split(os_version, " ")
+	if len(split_str) < 2 {
+		return SystemInfo{Kernel: MacOS, Distro: os_version}
+	}
+	v, err := version.NewVersion(split_str[1])
+	if err != nil {
+		return SystemInfo{Kernel: MacOS, Distro: os_version}
+	}
 	return SystemInfo{
 		Kernel:  MacOS,
-		Distro:  system_profile.SPSoftwareDataType[0].OSVersion,
-		Version: version.Must(version.NewVersion(major_version + "+" + minor_version)),
+		Distro:  os_version,
+		Version: v,
 	}
 }

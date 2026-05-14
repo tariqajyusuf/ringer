@@ -1,7 +1,6 @@
 package platforms
 
 type RingerError struct {
-	error
 	message string
 }
 
@@ -16,13 +15,19 @@ wrong package.
 */
 type PackageNotFound RingerError
 
+func (e *PackageNotFound) Error() string { return e.message }
+
 /*
 Indicates the package was not installed successfully.
 */
 type InstallError RingerError
+
+func (e *InstallError) Error() string { return e.message }
 
 /*
 If the package installation requires a higher privilege on the system, this will
 fire.
 */
 type AuthorizationError RingerError
+
+func (e *AuthorizationError) Error() string { return e.message }

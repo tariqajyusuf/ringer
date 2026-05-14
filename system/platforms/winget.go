@@ -2,7 +2,6 @@ package platforms
 
 import (
 	"errors"
-	"io"
 	"os/exec"
 	"strings"
 
@@ -57,24 +56,17 @@ func (w Winget) SetupPackageManager() error {
 
 func (w Winget) runWinget(verb string, packageName string) error {
 	runner := exec.Command("winget", verb, packageName, "--accept-source-agreements", "--accept-package-agreements")
-	err_pipe, err := runner.StderrPipe()
-	// TODO: Better handling for output failure
+	bytes, err := runner.CombinedOutput()
 	if err != nil {
-		return err
-	}
-	if err := runner.Start(); err != nil {
-
-		stderr, err := io.ReadAll(err_pipe)
-		// TODO: Warn of system state if output cannot be read
-		if err != nil {
-			return err
-		}
-
-		lines := strings.Split(string(stderr), "\n")
-		last_line := lines[len(lines)-1]
-		if strings.Contains(last_line, "No package found matching input criteria") {
-			return PackageNotFound{message: last_line}
-		}
+		return w.parseOutput(bytes)
 	}
 	return nil
+}
+
+func (w Winget) parseOutput(bytes []byte) error {
+	output := string(bytes)
+	if strings.Contains(output, "No package found matching input criteria") {
+		return &PackageNotFound{message: output}
+	}
+	return &InstallError{message: output}
 }

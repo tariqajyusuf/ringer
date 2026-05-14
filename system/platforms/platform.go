@@ -119,29 +119,25 @@ func (b *Broker) SetPreferredPlatform(name string) error {
 }
 
 // TODO: Try every package manager until one works.
-func (b *Broker) AddPackage(name string) {
+func (b *Broker) AddPackage(name string) error {
 	fmt.Printf("Installing via %s\n", b.preferred_platform)
 	err := b.Platforms[b.preferred_platform].AddPackage(name)
-	// TODO: We will probably need to handle errors more intelligently down the
-	// line but for now we will just regurgitate from the command line.
 	if err != nil {
-		fmt.Printf("Error installing package via %s error: %s\n", b.preferred_platform, err)
+		fmt.Printf("Error installing package via %s: %s\n", b.preferred_platform, err)
 	} else {
 		fmt.Printf("Successfully installed package via %s\n", b.preferred_platform)
-		return
 	}
+	return err
 }
 
 // TODO: Try every package manager until one works.
-func (b *Broker) RemovePackage(name string) {
+func (b *Broker) RemovePackage(name string) error {
 	fmt.Printf("Removing via %s\n", b.preferred_platform)
 	err := b.Platforms[b.preferred_platform].RemovePackage(name)
-	// TODO: We will probably need to handle errors more intelligently down the
-	// line but for now we will just regurgitate from the command line.
 	if err != nil {
-		fmt.Printf("Error removing package via %s error: %s\n", b.preferred_platform, err)
+		fmt.Printf("Error removing package via %s: %s\n", b.preferred_platform, err)
 	} else {
 		fmt.Printf("Successfully removed package via %s\n", b.preferred_platform)
-		return
 	}
+	return err
 }

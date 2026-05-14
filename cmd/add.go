@@ -36,8 +36,8 @@ func addHelper(broker *platforms.Broker, package_name string) {
 	}
 	if platform, ok := pkg.Platforms[broker.PreferredPlatform()]; !ok {
 		fmt.Printf("Package %s is not defined for platform %s\n", package_name, broker.PreferredPlatform())
-	} else {
-		broker.AddPackage(platform.PackageName)
+	} else if err := broker.AddPackage(platform.PackageName); err != nil {
+		return
 	}
 }
 

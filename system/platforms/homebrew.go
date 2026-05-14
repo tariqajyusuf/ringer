@@ -2,7 +2,6 @@ package platforms
 
 import (
 	"context"
-	"errors"
 	"os"
 	"os/exec"
 	"strings"
@@ -77,11 +76,9 @@ func (h Homebrew) runBrew(verb string, packageName string) error {
 func (h Homebrew) parseOutput(bytes []byte) error {
 	lines := strings.Split(string(bytes), "\n")
 	for _, line := range lines {
-		if strings.Contains(line, "Error") {
-			if strings.Contains(line, "No formulae or casks") {
-				return errors.New(line)
-			}
+		if strings.Contains(line, "No formulae or casks") {
+			return &PackageNotFound{message: line}
 		}
 	}
-	return nil
+	return &InstallError{message: string(bytes)}
 }

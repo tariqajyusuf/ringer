@@ -32,8 +32,8 @@ this system.`,
 		fmt.Printf("%+v\n", pkg)
 		if platform, ok := pkg.Platforms[broker.PreferredPlatform()]; !ok {
 			fmt.Printf("Package %s is not defined for platform %s\n", package_name, broker.PreferredPlatform())
-		} else {
-			broker.RemovePackage(platform.PackageName)
+		} else if err := broker.RemovePackage(platform.PackageName); err != nil {
+			return
 		}
 	},
 }

@@ -8,6 +8,8 @@ import (
 
 // TODO: Add validity checks for packages.
 
+var packageDataDir = "data/packages"
+
 /*
 Packages are definitions of applications that can be installed on different
 platforms. Each package contains the name, description, and platform-specific
@@ -24,7 +26,7 @@ type Package struct {
 
 func LocatePackage(name string) (*Package, error) {
 	// TODO: This needs to be more dynamic if the app will be more self-contained.
-	bytes, err := os.ReadFile("data/packages/" + name + ".package.yaml")
+	bytes, err := os.ReadFile(packageDataDir + "/" + name + ".package.yaml")
 	if err != nil {
 		return nil, err
 	}
