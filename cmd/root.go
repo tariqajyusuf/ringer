@@ -4,9 +4,11 @@ Copyright © 2025 Tariq Yusuf <tariq@tariqyusuf.in>
 package cmd
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/tariqajyusuf/ringer/system/platforms"
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -31,14 +33,20 @@ func Execute() {
 	}
 }
 
+var verbose bool
+
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Print detailed output")
+}
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.ringer.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+func printNoPlatformMessage(broker *platforms.Broker) {
+	fmt.Println("No platform managers are installed on this system.")
+	if skipped := broker.SkippedPlatforms(); len(skipped) > 0 {
+		fmt.Println("\nSupported managers for your OS (not yet installed):")
+		for _, p := range skipped {
+			fmt.Printf("  - %s  (run: ringer platform install %s)\n", p, p)
+		}
+	}
+	fmt.Println("\nTo request support for a new platform:")
+	fmt.Println("  https://github.com/tariqajyusuf/ringer/issues")
 }

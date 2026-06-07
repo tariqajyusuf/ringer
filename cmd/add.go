@@ -1,17 +1,14 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/tariqajyusuf/ringer/io"
+	ringerio "github.com/tariqajyusuf/ringer/io"
+	"github.com/tariqajyusuf/ringer/system"
 	"github.com/tariqajyusuf/ringer/system/platforms"
 )
 
-// addCmd represents the add command
 var addCmd = &cobra.Command{
 	Use:   "add [package name]",
 	Short: "Adds a package",
@@ -23,19 +20,28 @@ this system.`,
 			return
 		}
 		package_name := args[0]
-		broker := platforms.NewBroker()
-		addHelper(broker, package_name)
+		pkg, err := ringerio.LocatePackage(package_name)
+		if err != nil {
+			fmt.Printf("Could not locate package %s: %v\n", package_name, err)
+			return
+		}
+		if err := pkg.CheckOSAllowed(system.GetSystemInfo().Kernel); err != nil {
+			fmt.Println(err)
+			return
+		}
+		cfg, _ := ringerio.LoadConfig()
+		broker := platforms.NewBroker(verbose, cfg.PreferredPlatform)
+		if len(broker.Platforms) == 0 {
+			printNoPlatformMessage(broker)
+			return
+		}
+		addHelper(broker, pkg)
 	},
 }
 
-func addHelper(broker *platforms.Broker, package_name string) {
-	pkg, err := io.LocatePackage(package_name)
-	if err != nil {
-		fmt.Printf("Could not locate package %s: %v\n", package_name, err)
-		return
-	}
+func addHelper(broker *platforms.Broker, pkg *ringerio.Package) {
 	if platform, ok := pkg.Platforms[broker.PreferredPlatform()]; !ok {
-		fmt.Printf("Package %s is not defined for platform %s\n", package_name, broker.PreferredPlatform())
+		fmt.Printf("Package %s is not defined for platform %s\n", pkg.Name, broker.PreferredPlatform())
 	} else if err := broker.AddPackage(platform.PackageName); err != nil {
 		return
 	}
@@ -43,14 +49,4 @@ func addHelper(broker *platforms.Broker, package_name string) {
 
 func init() {
 	rootCmd.AddCommand(addCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

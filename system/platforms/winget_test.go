@@ -25,6 +25,11 @@ func TestWinget_EnabledForSystem_Linux(t *testing.T) {
 	assert.False(t, Winget{}.EnabledForSystem(system.SystemInfo{Kernel: system.Linux}))
 }
 
+func TestWinget_IsInstalled_WhenNotPresent(t *testing.T) {
+	// winget is not installed outside Windows
+	assert.False(t, Winget{}.IsInstalled())
+}
+
 func TestWinget_ParseOutput_NotFound(t *testing.T) {
 	w := Winget{}
 	output := []byte("No package found matching input criteria.\n")

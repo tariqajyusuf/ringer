@@ -1,5 +1,7 @@
 name: "DisplayLink"
 description: "A software solution for managing DisplayLink USB graphics adapters."
+os:
+  - macos
 platforms:
   homebrew:
     name: "displaylink"

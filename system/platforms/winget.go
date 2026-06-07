@@ -1,7 +1,10 @@
 package platforms
 
 import (
+	"bytes"
 	"errors"
+	"io"
+	"os"
 	"os/exec"
 	"strings"
 
@@ -13,6 +16,7 @@ Winget package platform (https://learn.microsoft.com/en-us/windows/package-manag
 */
 type Winget struct {
 	Platform
+	verbose bool
 }
 
 func (w Winget) AddPackage(name string) error {
@@ -36,6 +40,10 @@ func (w Winget) PlatformStub() string {
 	return "winget"
 }
 
+func (w Winget) IsInstalled() bool {
+	return w.PlatformInfo() != "Unknown"
+}
+
 func (w Winget) EnabledForSystem(sysinfo system.SystemInfo) bool {
 	switch sysinfo.Kernel {
 	case system.Windows:
@@ -45,7 +53,7 @@ func (w Winget) EnabledForSystem(sysinfo system.SystemInfo) bool {
 	}
 }
 
-func (w Winget) SetupPackageManager() error {
+func (w Winget) SetupPackageManager(_ bool) error {
 	if w.PlatformInfo() != "Unknown" {
 		return nil
 	}
@@ -56,9 +64,18 @@ func (w Winget) SetupPackageManager() error {
 
 func (w Winget) runWinget(verb string, packageName string) error {
 	runner := exec.Command("winget", verb, packageName, "--accept-source-agreements", "--accept-package-agreements")
-	bytes, err := runner.CombinedOutput()
+	if w.verbose {
+		var buf bytes.Buffer
+		runner.Stdout = io.MultiWriter(os.Stdout, &buf)
+		runner.Stderr = io.MultiWriter(os.Stderr, &buf)
+		if err := runner.Run(); err != nil {
+			return w.parseOutput(buf.Bytes())
+		}
+		return nil
+	}
+	out, err := runner.CombinedOutput()
 	if err != nil {
-		return w.parseOutput(bytes)
+		return w.parseOutput(out)
 	}
 	return nil
 }

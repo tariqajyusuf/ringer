@@ -29,6 +29,11 @@ func TestHomebrew_EnabledForSystem_Unknown(t *testing.T) {
 	assert.False(t, Homebrew{}.EnabledForSystem(system.SystemInfo{Kernel: system.Unknown}))
 }
 
+func TestHomebrew_IsInstalled_WhenNotPresent(t *testing.T) {
+	// brew is not installed in this environment
+	assert.False(t, Homebrew{}.IsInstalled())
+}
+
 func TestHomebrew_ParseOutput_NoFormulaeError(t *testing.T) {
 	h := Homebrew{}
 	output := []byte("Error: No formulae or casks with that name.\n")

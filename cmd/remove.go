@@ -1,17 +1,14 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"github.com/tariqajyusuf/ringer/io"
+	ringerio "github.com/tariqajyusuf/ringer/io"
+	"github.com/tariqajyusuf/ringer/system"
 	"github.com/tariqajyusuf/ringer/system/platforms"
 )
 
-// removeCmd represents the remove command
 var removeCmd = &cobra.Command{
 	Use:   "remove [package name]",
 	Short: "Remove a package",
@@ -23,13 +20,25 @@ this system.`,
 			return
 		}
 		package_name := args[0]
-		broker := platforms.NewBroker()
-		pkg, err := io.LocatePackage(package_name)
+		cfg, _ := ringerio.LoadConfig()
+		broker := platforms.NewBroker(verbose, cfg.PreferredPlatform)
+		if len(broker.Platforms) == 0 {
+			printNoPlatformMessage(broker)
+			return
+		}
+		pkg, err := ringerio.LocatePackage(package_name)
 		if err != nil {
 			fmt.Printf("Could not locate package %s: %v\n", package_name, err)
 			return
 		}
-		fmt.Printf("%+v\n", pkg)
+		sysinfo := system.GetSystemInfo()
+		if err := pkg.CheckOSAllowed(sysinfo.Kernel); err != nil {
+			fmt.Println(err)
+			return
+		}
+		if verbose {
+			fmt.Printf("%+v\n", pkg)
+		}
 		if platform, ok := pkg.Platforms[broker.PreferredPlatform()]; !ok {
 			fmt.Printf("Package %s is not defined for platform %s\n", package_name, broker.PreferredPlatform())
 		} else if err := broker.RemovePackage(platform.PackageName); err != nil {
@@ -40,14 +49,4 @@ this system.`,
 
 func init() {
 	rootCmd.AddCommand(removeCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// removeCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// removeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

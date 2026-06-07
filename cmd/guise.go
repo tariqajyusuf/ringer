@@ -1,6 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -8,12 +5,12 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/tariqajyusuf/ringer/io"
+	ringerio "github.com/tariqajyusuf/ringer/io"
+	"github.com/tariqajyusuf/ringer/system"
 	"github.com/tariqajyusuf/ringer/system/platforms"
 	"gopkg.in/yaml.v3"
 )
 
-// guiseCmd represents the guise command
 var guiseCmd = &cobra.Command{
 	Use:   "guise [guise file]",
 	Short: "Install based on a guise file",
@@ -29,15 +26,30 @@ of a desired system state. It contains a list of packages based on their package
 			fmt.Printf("Could not read guise file: %v\n", err)
 			return
 		}
-		var guise io.Guise
+		var guise ringerio.Guise
 		err = yaml.Unmarshal(guise_file, &guise)
 		if err != nil {
 			fmt.Printf("Could not parse guise file: %v\n", err)
 			return
 		}
-		fmt.Printf("Found %d packages to install", len(guise.Packages))
-		broker := platforms.NewBroker()
-		for _, pkg := range guise.Packages {
+		cfg, _ := ringerio.LoadConfig()
+		broker := platforms.NewBroker(verbose, cfg.PreferredPlatform)
+		if len(broker.Platforms) == 0 {
+			printNoPlatformMessage(broker)
+			return
+		}
+		kernel := system.GetSystemInfo().Kernel
+		fmt.Printf("Found %d packages to install\n", len(guise.Packages))
+		for _, pkgName := range guise.Packages {
+			pkg, err := ringerio.LocatePackage(pkgName)
+			if err != nil {
+				fmt.Printf("Could not locate package %s: %v\n", pkgName, err)
+				continue
+			}
+			if err := pkg.CheckOSAllowed(kernel); err != nil {
+				fmt.Println(err)
+				continue
+			}
 			addHelper(broker, pkg)
 		}
 	},
@@ -45,14 +57,4 @@ of a desired system state. It contains a list of packages based on their package
 
 func init() {
 	rootCmd.AddCommand(guiseCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// guiseCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// guiseCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
